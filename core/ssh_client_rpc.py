@@ -25,7 +25,7 @@ class SSHClient(object):
 
     def _set_consume(self):
         """设置接收消息的参数."""
-        self.channel.basic_consume(self._callback, self.queue)
+        self.channel.basic_consume(self._callback, queu)
 
     def _callback(self, channel, method, properties, body):
         """收到消息时的回调方法."""
