@@ -1,3 +1,3 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
-from bin import main
+from core import ssh_client_rpc

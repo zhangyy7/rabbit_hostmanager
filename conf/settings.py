@@ -3,11 +3,11 @@
 """基于rabbitmq的简单ssh的通用参数."""
 
 # rabbitmq服务器地址
-hostname = '192.168.146.135'
+hostname = '192.168.159.130'
 port = 5672
-username = 'test'
-passwd = 'test'
+username = 'guest'
+passwd = 'guest'
 vhost = '/'
-q_name = 'command'
+q_name = 'command1'
 exchange_name = 'batch_cmd'
 exchange_type = 'topic'
