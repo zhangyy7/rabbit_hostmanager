@@ -4,7 +4,7 @@
 
 import pika
 import subprocess
-import settings
+from conf import settings
 
 
 class SSHClient(object):
@@ -16,10 +16,11 @@ class SSHClient(object):
             settings.username, settings.passwd)
         conn_params = pika.ConnectionParameters(
             settings.hostname, settings.port, settings.vhost, user_info)
-        self.queue_name = settings.q_name
         self.connection = pika.BlockingConnection(conn_params)
         self.channel = self.connection.channel()
-        self.channel.queue_declare(self.queue_name)
+        self.channel.exchange_declare(
+            exchange=settings.exchange_name,
+            exchange_type=settings.exchange_type)
         self._set_consume()
 
     def _set_consume(self):
