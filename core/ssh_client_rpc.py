@@ -131,5 +131,6 @@ class SSHClient(object):
                 continue
 
 
-ssh = SSHClient()
-ssh.interactive()
+def main():
+    ssh = SSHClient()
+    ssh.interactive()
