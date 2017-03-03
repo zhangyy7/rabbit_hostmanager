@@ -5,6 +5,7 @@
 import pika
 import subprocess
 import psutil
+import platform
 from conf import settings
 
 
@@ -56,7 +57,8 @@ class SSHServer(object):
 
     def _callback(self, channel, method, properties, body):
         """收到消息时的回调方法."""
-        command = body
+        command = body.decode()
+        print(command)
         result = self._exec_cmd(command)
         routing_key = properties.reply_to
         correlation_id = properties.correlation_id
@@ -70,6 +72,7 @@ class SSHServer(object):
 
     def _put_result_to_rabbit(self, message, routing_key, correlation_id):
         """将消息发送到rabbitmq."""
+        print("发送结果到rabbitmq", message)
         self.channel.basic_publish(
             exchange='',
             routing_key=routing_key,

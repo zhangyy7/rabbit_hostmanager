@@ -37,13 +37,13 @@ class SSHClient(object):
     def _set_consume(self):
         """设置接收消息的参数."""
         self.channel.basic_consume(
-            self._callback, queue=self.res_queue, no_ack=True)
+            self._callback, queue=self.res_queue)
 
     def _callback(self, channel, method, properties, body):
         """收到消息时的回调方法."""
         for task_id, correlation_id in self.task_correlation_ref.items():
-            if correlation_id == properties.correlation_id:
-                self.task_dict[task_id] = body
+            if str(correlation_id) == properties.correlation_id:
+                self.task_dict[task_id]["res"] = body.decode()
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
     def _send_cmd_to_rabbit(
@@ -76,8 +76,8 @@ class SSHClient(object):
         """
         self.connection.process_data_events()
         if task_id in self.task_dict:
-            if self.task_correlation_ref[task_id]:
-                result = self.task_correlation_ref[task_id]
+            if self.task_dict[task_id]:
+                result = self.task_dict[task_id]["res"].encode()
                 self._clear_task(task_id)
             else:
                 result = '结果未返回'.encode()
@@ -118,7 +118,8 @@ class SSHClient(object):
         except ValueError:
             print("任务ID输入有误")
             return
-        self._check_task(task_id)
+        result = self._check_task(task_id).decode()
+        print(result)
 
     def interactive(self):
         """与用户交互的方法."""
